@@ -1,0 +1,46 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(AudioSource))]
+public class StartSheepJump : MonoBehaviour
+{
+
+    #region Variables
+
+    public GameObject Sheep;
+    public SheepController sc;
+
+    [SerializeField]
+    private AudioClip clip;
+
+    private AudioSource audiosource;  
+
+    #endregion
+
+    #region Detect Player To Start Sheep Jump 
+    private void Start()
+    {
+        audiosource = GetComponent<AudioSource>();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        sc = Sheep.GetComponent<SheepController>();
+        if (other.gameObject.tag == "Player")
+        {
+            audiosource.Play();
+            Sheep.gameObject.SetActive(true);
+            Sheep.GetComponent<Follower>().pathcreator = transform.parent.GetChild(1).GetComponent<PathCreation.PathCreator>();
+        }
+    }
+
+    public void PlayCountingSound()
+    {
+        audiosource.Stop();
+        audiosource.clip = null;
+        audiosource.clip = clip;
+        audiosource.Play();
+    }
+    #endregion
+}
